@@ -258,4 +258,4 @@ MIT
 
 ## Author
 
-Built with modern web technologies.
+[Mejanur Rahman](https://github.com/mrmezan06) — Full-Stack Developer & AI Enthusiast
