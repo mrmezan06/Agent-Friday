@@ -1,0 +1,67 @@
+.reactor-logo {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  width: 48px;
+  height: 48px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reactor-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2.5px solid transparent;
+  border-top-color: var(--accent);
+  filter: drop-shadow(0 0 3px rgba(0, 243, 255, 0.4));
+}
+
+.reactor-ring.r1 {
+  width: 42px;
+  height: 42px;
+  animation: spinRing 3s linear infinite;
+  border-right-color: rgba(0, 243, 255, 0.55);
+  opacity: 0.8;
+}
+
+.reactor-ring.r2 {
+  width: 28px;
+  height: 28px;
+  animation: spinRing 2s linear infinite reverse;
+  border-left-color: rgba(0, 243, 255, 0.7);
+  border-bottom-color: rgba(0, 243, 255, 0.45);
+  opacity: 0.85;
+}
+
+.reactor-ring.r3 {
+  width: 16px;
+  height: 16px;
+  animation: spinRing 1.5s linear infinite;
+  border-bottom-color: rgba(255, 255, 255, 0.75);
+  opacity: 0.9;
+}
+
+.reactor-core {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 10px var(--accent-glow),
+    0 0 20px var(--accent-glow),
+    0 0 35px rgba(0, 243, 255, 0.6);
+  animation: corePulse 2s ease-in-out infinite;
+}
+
+@keyframes spinRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes corePulse {
+  0%, 100% { transform: scale(0.7); opacity: 0.85; }
+  50% { transform: scale(1.6); opacity: 1; }
+}
