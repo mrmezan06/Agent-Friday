@@ -1,6 +1,6 @@
 # AGENT Friday — AI Voice Assistant
 
-A modern, fully voice-controlled AI assistant built with React, Node.js, Express, MongoDB, Groq LLM, and SerpAPI. Features a sleek dark UI with animated background blobs, real-time system monitoring, live voice visualization, and intelligent command execution — JARVIS-inspired.
+A modern, fully voice-controlled AI assistant built with React, Node.js, Express, Groq LLM, and SerpAPI. Features a sleek dark UI with animated background blobs, real-time system monitoring, live voice visualization, and intelligent command execution — JARVIS-inspired.
 
 ---
 
@@ -33,7 +33,7 @@ A modern, fully voice-controlled AI assistant built with React, Node.js, Express
 
 - **Weather** — Open-Meteo API (free, no key). Shows temperature, conditions, humidity, wind. Generates spoken summary via LLM.
 - **Open/Close Websites** — Voice commands to open sites in current or specified browser.
-- **Delete History** — Clear all stored commands from MongoDB.
+- **Delete History** — Clear all stored commands (in-memory).
 
 ### Real-Time Dashboard
 
@@ -67,7 +67,6 @@ A modern, fully voice-controlled AI assistant built with React, Node.js, Express
 | --------------- | ------------------------------------------------------------------ |
 | **Frontend**    | React 18.3.1, Axios 1.7.2, Web Speech API                          |
 | **Backend**     | Node.js, Express 4.19.2                                            |
-| **Database**    | MongoDB, Mongoose 8.4.1                                            |
 | **LLM**         | Groq SDK 0.5.0 (`llama-3.3-70b-versatile`)                         |
 | **Search**      | Serper.dev (Google), direct URL routing (YouTube, Wikipedia, etc.) |
 | **Weather**     | Open-Meteo API (free, no key)                                      |
@@ -82,16 +81,14 @@ AGENT Friday/
 ├── server/
 │   ├── .env                          # API keys & config
 │   ├── package.json
-│   ├── server.js                     # Express entry, MongoDB connect, route registration
-│   ├── models/
-│   │   └── Command.js                # Mongoose schema
+│   ├── server.js                     # Express entry, route registration
 │   ├── routes/
 │   │   ├── command.js                # POST /process, GET /history, DELETE /history
 │   │   ├── weather.js                # GET /current, GET /by-city
-│   │   └── system.js                 # GET /info (CPU, RAM, DB stats)
+│   │   └── system.js                 # GET /info (CPU, RAM, OS)
 │   ├── controllers/
-│   │   ├── commandController.js      # MongoDB CRUD
-│   │   └── systemController.js       # OS + DB stats aggregator
+│   │   ├── commandController.js      # In-memory command storage
+│   │   └── systemController.js       # OS stats aggregator
 │   └── services/
 │       ├── groqService.js            # LLM classification, Q&A, summarization
 │       ├── searchService.js          # Multi-engine search
@@ -127,7 +124,6 @@ AGENT Friday/
 ### Prerequisites
 
 - Node.js 18+
-- MongoDB (local or Atlas)
 
 ### 1. Backend
 
@@ -140,13 +136,11 @@ Create `.env` in `server/`:
 
 ```env
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/ai_assistant
 GROQ_API_KEY=your_groq_api_key_here
 SERP_API_KEY=your_serp_api_key_here
 ```
 
 ```bash
-mongod                                      # Start MongoDB
 npm start                                   # or: npm run dev (nodemon)
 ```
 
@@ -194,7 +188,7 @@ Frontend runs on `http://localhost:3000`. Defaults proxy to port 5000.
 | "Open facebook in chrome"            | Concept (browser routing)               |
 | "Close YouTube tab"                  | Concept (tab management)                |
 | "What is the capital of France?"     | LLM-powered answer                      |
-| "Delete all the info"                | Clears MongoDB command history          |
+| "Delete all the info"                | Clears in-memory command history        |
 
 ---
 
@@ -208,7 +202,7 @@ Frontend runs on `http://localhost:3000`. Defaults proxy to port 5000.
 | `DELETE` | `/api/command/history`          | Clear all command history       |
 | `GET`    | `/api/weather/current`          | Weather for configured location |
 | `GET`    | `/api/weather/by-city?city=...` | Weather by city name            |
-| `GET`    | `/api/system/info`              | CPU, RAM, OS, MongoDB stats     |
+| `GET`    | `/api/system/info`              | CPU, RAM, OS stats               |
 
 ---
 
@@ -242,7 +236,7 @@ Frontend runs on `http://localhost:3000`. Defaults proxy to port 5000.
 ### Platform
 
 - [ ] **Desktop App** — Electron wrapper with system tray, global hotkeys, native notifications.
-- [ ] **Docker Deployment** — Single `docker-compose up` for backend + MongoDB.
+- [ ] **Docker Deployment** — Single `docker-compose up` for backend.
 - [ ] **Authentication** — User accounts, OAuth (Google/GitHub), per-user history.
 - [ ] **Plugin System** — Community extensions for custom commands and integrations.
 

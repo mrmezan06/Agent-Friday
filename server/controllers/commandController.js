@@ -1,9 +1,15 @@
-const Command = require('../models/Command');
+const commands = [];
 
 exports.saveCommand = async (data) => {
   try {
-    const command = new Command(data);
-    return await command.save();
+    const command = {
+      _id: Date.now().toString(),
+      ...data,
+      executedAt: new Date(),
+    };
+    commands.unshift(command);
+    if (commands.length > 200) commands.length = 200;
+    return command;
   } catch (error) {
     console.error('Save command error:', error.message);
     return null;
@@ -12,11 +18,8 @@ exports.saveCommand = async (data) => {
 
 exports.getAllCommands = async (page = 1, limit = 20) => {
   try {
-    return await Command.find()
-      .sort({ executedAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean();
+    const start = (page - 1) * limit;
+    return commands.slice(start, start + limit);
   } catch (error) {
     console.error('Get commands error:', error.message);
     return [];
@@ -25,7 +28,8 @@ exports.getAllCommands = async (page = 1, limit = 20) => {
 
 exports.deleteAllCommands = async () => {
   try {
-    return await Command.deleteMany({});
+    commands.length = 0;
+    return { deletedCount: 0 };
   } catch (error) {
     console.error('Delete commands error:', error.message);
     return null;
@@ -34,7 +38,7 @@ exports.deleteAllCommands = async () => {
 
 exports.getCommandById = async (id) => {
   try {
-    return await Command.findById(id).lean();
+    return commands.find((c) => c._id === id) || null;
   } catch (error) {
     console.error('Get command error:', error.message);
     return null;

@@ -1,6 +1,5 @@
 require('dotenv').config({ path: __dirname + '/.env' });
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const commandRoutes = require('./routes/command');
 const weatherRoutes = require('./routes/weather');
@@ -20,16 +19,8 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log('MongoDB connected successfully');
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  })
-  .catch(err => {
-    console.error('MongoDB connection error:', err.message);
-    process.exit(1);
-  });
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 module.exports = app;

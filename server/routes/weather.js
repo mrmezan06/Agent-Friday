@@ -11,6 +11,9 @@ router.get('/current', async (req, res) => {
   }
 });
 
+// Example: GET /api/weather/by-city?city=London
+// Note: In a real app, you'd want to validate and sanitize the city parameter.
+// Currently, not using this endpoint from the frontend, but it's here for demonstration and future use.
 router.get('/by-city', async (req, res) => {
   try {
     const weather = await WeatherService.getWeatherByCity(req.query.city);
